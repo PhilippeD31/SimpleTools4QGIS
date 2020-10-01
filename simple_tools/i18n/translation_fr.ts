@@ -19,37 +19,32 @@
         <translation>Si le contenu du CSV affiche des caractères bizarres, essayer un encodage différent</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="110"/>
-        <source>Minimum: 1 - Maximum: 10000</source>
-        <translation>Minimum: 1 - Maximum: 10000</translation>
-    </message>
-    <message>
-        <location filename="../open_BIG_CSV.py" line="115"/>
+        <location filename="../open_BIG_CSV.py" line="98"/>
         <source>Reload</source>
         <translation>Afficher</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="120"/>
+        <location filename="../open_BIG_CSV.py" line="103"/>
         <source>Update the preview below</source>
         <translation>Mettre à jour l&apos;aperçu ci-dessous</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="123"/>
+        <location filename="../open_BIG_CSV.py" line="106"/>
         <source>Save the modified file</source>
         <translation>Enregistrer les modifications du CSV</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="125"/>
+        <location filename="../open_BIG_CSV.py" line="108"/>
         <source>Save your modifications in a new file</source>
         <translation>Sauvegarde vos modifications dans un nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="235"/>
+        <location filename="../open_BIG_CSV.py" line="218"/>
         <source>You may change the encoding above in order to correct the ufffd</source>
         <translation>Vous devriez changer l&apos;encodage défini ci-dessus pour corriger les \ufffd</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="236"/>
+        <location filename="../open_BIG_CSV.py" line="219"/>
         <source>When reading the file with encoding %s 
  some characters were not reconized 
  and they are printed as ufffd 
@@ -60,17 +55,17 @@ Which means that the file was saved with a different encoding.</source>
 Cela veut dire que le fichier a été créé avec un autre encodage.</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="237"/>
+        <location filename="../open_BIG_CSV.py" line="220"/>
         <source>Attention </source>
         <translation>Attention </translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="287"/>
+        <location filename="../open_BIG_CSV.py" line="270"/>
         <source>You can&apos;t save the file with this encoding: %s. Please choose another one!</source>
         <translation>Vous ne pouvez pas enregistrer ce fichier avec l&apos;encodage %s. Il faut le changer !</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="288"/>
+        <location filename="../open_BIG_CSV.py" line="271"/>
         <source>The original file was saved with another encoding.
 
 You may find it by trying other encodings in the list above.</source>
@@ -79,49 +74,69 @@ You may find it by trying other encodings in the list above.</source>
 Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="289"/>
+        <location filename="../open_BIG_CSV.py" line="272"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="294"/>
+        <location filename="../open_BIG_CSV.py" line="277"/>
         <source>Enter the name of the new file</source>
         <translation>#Saisir le nom du nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="323"/>
+        <location filename="../open_BIG_CSV.py" line="306"/>
         <source>Failed</source>
         <translation>Echec</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="322"/>
+        <location filename="../open_BIG_CSV.py" line="305"/>
         <source>Couldn&apos;t write %s</source>
         <translation>Echec de l&apos;écriture de %s</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="326"/>
+        <location filename="../open_BIG_CSV.py" line="309"/>
         <source>Saving in progress</source>
         <translation>Enregistrement en cours</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="326"/>
+        <location filename="../open_BIG_CSV.py" line="309"/>
         <source>it may take a long time if the file is big...</source>
         <translation>si le fichier est gros cela peut être long...</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="344"/>
+        <location filename="../open_BIG_CSV.py" line="327"/>
         <source>The file was successfully saved</source>
         <translation>le fichier a bien été enregistré</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="299"/>
+        <location filename="../open_BIG_CSV.py" line="282"/>
         <source>Sorry, you can&apos;t save with the same path et file name!</source>
         <translation>Désolé, vous ne pouvez pas enregistrer avec le même chemin et nom de fichier !</translation>
     </message>
     <message>
-        <location filename="../open_BIG_CSV.py" line="345"/>
+        <location filename="../open_BIG_CSV.py" line="328"/>
         <source>Success</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../open_BIG_CSV.py" line="85"/>
+        <source>To Define the number of lines to display</source>
+        <translation>Choisir le nombre de lignes à afficher</translation>
+    </message>
+    <message>
+        <location filename="../open_BIG_CSV.py" line="84"/>
+        <source>Display</source>
+        <translation>Voir</translation>
+    </message>
+    <message>
+        <location filename="../open_BIG_CSV.py" line="92"/>
+        <source>lines</source>
+        <translation>lignes</translation>
+    </message>
+    <message>
+        <location filename="../open_BIG_CSV.py" line="93"/>
+        <source>Number of lines to display (Maximum: 10000)</source>
+        <translation>Nombre de lignes à afficher (Maximum : 10000)</translation>
     </message>
 </context>
 <context>
@@ -190,16 +205,6 @@ Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</t
         <location filename="../categorized_from_csv.py" line="91"/>
         <source>Save layer style as default</source>
         <translation>Sauver comme style par défaut de la couche</translation>
-    </message>
-    <message>
-        <location filename="../categorized_from_csv.py" line="114"/>
-        <source>Warning: CSV is required!</source>
-        <translation type="obsolete">Attention : un fichier csv est requis !</translation>
-    </message>
-    <message>
-        <location filename="../categorized_from_csv.py" line="119"/>
-        <source>Warning: invalid parameter</source>
-        <translation type="obsolete">Attention : paramètre invalide</translation>
     </message>
     <message>
         <location filename="../categorized_from_csv.py" line="123"/>
