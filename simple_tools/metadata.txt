@@ -18,7 +18,7 @@ changelog=0.3.0 3rd tool: Convert JSON to CSV
  0.1.0 First tool: Categorized style from CSV
 
 # tags are comma separated with spaces allowed
-tags=vector, style
+tags=vector, style, json, csv, big files
 icon=icons/tools.png
 experimental=False
 deprecated=False
