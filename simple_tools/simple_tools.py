@@ -24,7 +24,7 @@ from .categorized_from_csv import csvToCategorized
 #from .test_algorithm import pluginAlgorithm
 
 cePlugin= os.path.basename( os.path.dirname(__file__) )
-version= pluginMetadata(cePlugin,'version') ## Pour les changements, voir le fichier metadata.txt
+PluginVersion= pluginMetadata(cePlugin,'version') ## Pour les changements, voir le fichier metadata.txt
 
 
 def showHelp( parent=None ):  ### Help window
@@ -65,6 +65,7 @@ class plugin:
   def __init__(self, iface):
     self.provider= None # Processing
     self.csvEditor= None # Dialog
+    self.jsonConv= None # Dialog
     self.params= "PluginStylingHelper/" # User Param in QSettings
 
   def tr(self, txt, disambiguation=None):
@@ -89,13 +90,17 @@ class plugin:
     icons= pluginPath + os.sep + "icons" + os.sep
     self.pluginMenu= iface.pluginMenu().addMenu( QIcon(icons+'tools.png'), self.tr("Simple tools") )
     
-    self.aEditor= QAction( QIcon( icons +'edit.png'),
+    self.actionEditor= QAction( QIcon( icons +'edit.png'),
       self.tr("Inspect the first rows of a big CSV or text file"), iface.mainWindow() )
-    self.aEditor.triggered.connect( self.showCsvEditor )
-    self.pluginMenu.addAction( self.aEditor )
-    iface.addToolBarIcon( self.aEditor )
+    self.actionEditor.triggered.connect( self.showCsvEditor )
+    self.pluginMenu.addAction( self.actionEditor )  #iface.addToolBarIcon( self.actionEditor )
     
-    self.actionAide= QAction( self.tr('Help (plugin version %s)')% version, iface.mainWindow() )
+    self.jConv= QAction( QIcon( icons +'json.png'), self.tr("Convert JSON to CSV"), iface.mainWindow() )
+    self.jConv.triggered.connect(self.showJsonConv)
+    self.pluginMenu.addAction( self.jConv )  #iface.addToolBarIcon(self.jConv)
+    
+    self.actionAide= QAction( QIcon( icons +'help.png'),
+      self.tr('Help (plugin version %s)')% PluginVersion, iface.mainWindow() )
     self.actionAide.triggered.connect( showHelp )
     self.pluginMenu.addAction( self.actionAide )
     
@@ -104,12 +109,8 @@ class plugin:
 
   def unload(self):
     self.pluginMenu.parentWidget().removeAction(self.pluginMenu.menuAction()) # Remove from Extension menu
-    iface.removeToolBarIcon(self.aEditor)
-    """if hasattr(self, 'action'):
-      iface.addLayerMenu().removeAction(self.action)
-      iface.layerToolBar().removeAction(self.action)
-      #iface.removeVectorToolBarIcon(self.action)
-      #self.iface.removeToolBarIcon(self.action)  #self.iface.layerToolBar().removeAction(self.action)  """
+    #if hasattr(self, 'actionEditor'):  iface.removeToolBarIcon(self.actionEditor)
+    #if hasattr(self, 'jConv'):  iface.removeToolBarIcon(self.jConv)
     try: QgsApplication.processingRegistry().removeProvider(self.provider)
     except: pass
 
@@ -122,6 +123,12 @@ class plugin:
       from .open_BIG_CSV import bigFileEditor
       self.csvEditor= bigFileEditor()
     self.csvEditor.show()
+
+  def showJsonConv(self):
+    if not self.jsonConv:
+      from .json2csv import json2csv
+      self.jsonConv= json2csv()
+    self.jsonConv.show()
 
 
 
@@ -142,8 +149,7 @@ class Provider(QgsProcessingProvider):
 
   def name(self, *args, **kwargs):
     """The human friendly name of your plugin in Processing.
-    This string should be as short as possible (e.g. "Lastools", not
-    "Lastools version 1.0.1 64-bit") and localised."""
+    This string should be as short as possible (e.g. "Lastools" and localised."""
     return self.procName
 
   def icon(self):

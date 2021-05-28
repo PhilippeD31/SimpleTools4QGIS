@@ -144,7 +144,7 @@ Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</t
     <message>
         <location filename="../categorized_from_csv.py" line="46"/>
         <source>Apply a categorized style to a vector layer from a CSV file with values, labels and colors.&lt;br&gt;&lt;br&gt;Color values:&lt;br&gt;a name: green&lt;br&gt;or RGB: 0,255,34&lt;br&gt;or hexa: #00FF22</source>
-        <translation>Donner un style catégorisé à une couche vecteur à partir d&apos;un fichier CSV avec valeurs, libellés et couleurs.&lt;br&gt;&lt;br&gt;Couleurs possibles :&lt;br&gt;un nom (anglais) : green&lt;br&gt;ou au format RGB : 0,255,34&lt;br&gt;ou hexadécimal : #00FF22</translation>
+        <translation>Donner un style catégorisé à une couche vecteur à partir d&apos;un fichier CSV avec valeurs, libellés et couleurs.&lt;br&gt;&lt;br&gt;Comment décrire les couleurs :&lt;br&gt;par un nom (anglais) : green&lt;br&gt;ou au format RGB : 0,255,34&lt;br&gt;ou en hexadécimal : #00FF22</translation>
     </message>
     <message>
         <location filename="../categorized_from_csv.py" line="58"/>
@@ -245,26 +245,184 @@ Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</t
     </message>
 </context>
 <context>
+    <name>json2csv</name>
+    <message>
+        <location filename="../json2csv.py" line="49"/>
+        <source>Convert a JSON file to CSV</source>
+        <translation>Convertir un fichier JSON en CSV</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="58"/>
+        <source>Convert JSON to CSV by flattening the json tree</source>
+        <translation>Convertir du JSON en CSV en aplatissant l&apos;arbre json</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="61"/>
+        <source>Sub level branches are converted to simple fields and their fieldnames are concatenated (separated by &apos;_&apos;)</source>
+        <translation>Les sous-niveaux sont convertis en simples champs avec leurs noms concaténés (séparés par &apos;_&apos;)</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="65"/>
+        <source>Choose the file</source>
+        <translation>Choisir le fichier</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="88"/>
+        <source>Options:</source>
+        <translation>Options :</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="93"/>
+        <source>CSV delimiter</source>
+        <translation>Délimiteur CSV</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="96"/>
+        <source>Define the CSV delimiter</source>
+        <translation>Définir le délimiteur des champs du CSV</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="101"/>
+        <source>Preview</source>
+        <translation>Aperçu</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="102"/>
+        <source>To Define the number of lines to display</source>
+        <translation>Choisir le nombre de lignes à afficher</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="109"/>
+        <source>lines</source>
+        <translation>lignes</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="110"/>
+        <source>Number of lines to display (Maximum: 10000)</source>
+        <translation>Nombre de lignes à afficher (Maximum : 10000)</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="117"/>
+        <source>Reload</source>
+        <translation>Rafraichir</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="132"/>
+        <source>If the JSON content has strange characters, try a different encoding</source>
+        <translation>Si le contenu du JSON affiche des caractères bizarres, essayer un encodage différent</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="157"/>
+        <source>Convert the JSON file to a CSV file</source>
+        <translation>Convertir le fichier JSON en un fichier CSV</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="251"/>
+        <source>You may change the encoding above in order to correct the ufffd</source>
+        <translation>Vous devriez changer l&apos;encodage défini ci-dessus pour corriger les \ufffd</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="252"/>
+        <source>When reading the file with encoding %s 
+ some characters were not reconized 
+ and they are printed as ufffd 
+Which means that the file was saved with a different encoding.</source>
+        <translation>Lors de la lecture du fichier avec l&apos;encodage %s
+ des caractères n&apos;ont pas été reconnus
+ et ils s&apos;affichent ainsi : \ufffd
+Cela veut dire que le fichier a été créé avec un autre encodage.</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="253"/>
+        <source>Attention </source>
+        <translation>Attention </translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="410"/>
+        <source>You can&apos;t save the file with this encoding: %s. Please choose another one!</source>
+        <translation>Vous ne pouvez pas enregistrer ce fichier avec l&apos;encodage %s. Il faut le changer !</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="411"/>
+        <source>The original file was saved with another encoding.
+
+You may find it by trying other encodings in the list above.</source>
+        <translation>Le fichier d&apos;origine a été créé avec un autre encodage.
+
+Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="412"/>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="417"/>
+        <source>Enter the name of the new file</source>
+        <translation>Saisir le nom du nouveau fichier</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="422"/>
+        <source>Sorry, you can&apos;t save with the same path et file name!</source>
+        <translation>Désolé, vous ne pouvez pas enregistrer avec le même chemin et nom de fichier !</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="436"/>
+        <source>Failed</source>
+        <translation>Echec</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="427"/>
+        <source>Saving in progress</source>
+        <translation>Enregistrement en cours</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="427"/>
+        <source>it may take a long time if the file is big...</source>
+        <translation>si le fichier est gros cela peut être long...</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="487"/>
+        <source>The file was successfully saved</source>
+        <translation>Le fichier a bien été enregistré</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="488"/>
+        <source>Success</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="155"/>
+        <source>Save to a CSV file</source>
+        <translation>Enregistrer dans un fichier CSV</translation>
+    </message>
+</context>
+<context>
     <name>plugin</name>
     <message>
-        <location filename="../simple_tools.py" line="117"/>
+        <location filename="../simple_tools.py" line="118"/>
         <source>Styling helper</source>
         <translation>Assistant de styles</translation>
     </message>
     <message>
-        <location filename="../simple_tools.py" line="90"/>
+        <location filename="../simple_tools.py" line="91"/>
         <source>Simple tools</source>
         <translation>Couteau suisse pour QGIS</translation>
     </message>
     <message>
-        <location filename="../simple_tools.py" line="92"/>
+        <location filename="../simple_tools.py" line="93"/>
         <source>Inspect the first rows of a big CSV or text file</source>
         <translation>Inspecter les 1ères lignes d&apos;un gros fichier CSV ou texte</translation>
     </message>
     <message>
-        <location filename="../simple_tools.py" line="98"/>
+        <location filename="../simple_tools.py" line="102"/>
         <source>Help (plugin version %s)</source>
         <translation>Aide (plugin version %s)</translation>
+    </message>
+    <message>
+        <location filename="../simple_tools.py" line="98"/>
+        <source>Convert JSON to CSV</source>
+        <translation>Convertir du JSON en CSV</translation>
     </message>
 </context>
 </TS>

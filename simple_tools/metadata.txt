@@ -1,18 +1,20 @@
 [general]
 name=Simple tools
-name[fr]=Outils simples
-version=0.2.0
+name[fr]=Couteau suisse pour QGIS
+version=0.3.0
 qgisMinimumVersion=3.10
 hasProcessingProvider=yes
 
 description=A collection of simple tools for QGIS.
 description[fr]=Conçu comme une collection d'outils simples. Une sorte de "couteau suisse" pour QGIS.
 
-about=## In Processing toolbox > <b>Styling helper</b> :<br>-- <b>Categorized style from CSV</b><br><br>## In Plugins menu > <b>Simple tools</b> :<br>-- <b>Inspect BIG csv (or text) files</b> by quickly showing their first rows
+about=## In Processing toolbox > <b>Styling helper</b> :<br>-- <b>Categorized style from CSV</b><br><br>## In Plugins menu > <b>Simple tools</b> :<br>-- <b>Inspect BIG csv (or text) files</b> by quickly showing their first rows.  <br>-- <b>Convert JSON to CSV</b>: flatten a json tree
 
-about[fr]=## Dans la boite à outils de traitement > <b>Assistant de styles</b> :<br>-- <b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les codes, libellés et couleurs) pour donner un style catégorisé à une couche vecteur<br><br>## Dans le menu Extensions > <b>Couteau suisse pour QGIS</b> :<br>-- <b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.
+about[fr]=## Dans Traitement > Boîte à outils > <b>Assistant de styles</b> :<br>-- <b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les codes, libellés et couleurs) pour donner un style catégorisé à une couche vecteur<br><br>## Dans le menu Extensions > <b>Couteau suisse pour QGIS</b> :<br>-- <b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.  <br>-- <b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.
 
-changelog=0.2.0 2nd tool : Inspect BIG csv (or text) files
+changelog=0.3.0 3rd tool: Convert JSON to CSV
+ 0.2.1 Small improvement
+ 0.2.0 2nd tool : Inspect BIG csv (or text) files
  0.1.0 First tool: Categorized style from CSV
 
 # tags are comma separated with spaces allowed
