@@ -23,6 +23,7 @@ class json2csv(QDialog):
     self.nbRows= 20
     self.delimiter= ';'
     self.concatFields= '_'
+    self.lignes= []
     
     # Translator :
     pluginPath= os.path.abspath(os.path.dirname(__file__))
@@ -52,7 +53,7 @@ class json2csv(QDialog):
     self.setGeometry(win.geometry().x()+10, win.geometry().y()-10, 600, 500)
     
     grille= QGridLayout(self)
-    grille.setContentsMargins(6, 2, 6, 2)
+    grille.setContentsMargins(6, 6, 6, 6)
     
     li= 0
     etiPres1= QLabel('<center><b>'+ self.tr("Convert JSON to CSV by flattening the json tree") +'</b></center>')
@@ -64,24 +65,39 @@ class json2csv(QDialog):
     li += 1
     hLayout0= QHBoxLayout()
     grille.addLayout(hLayout0, li, 0, 1, 2)
-    etiEx1= QLabel('<b>{"id":123, "contact": {"tel":555, "mail":"a@b.c"}}</b>')
+    etiEx1= QLabel('{"id":123, <b>"contact": {"tel":555, "mail":"a@b.c"}</b>}')
     hLayout0.addWidget(etiEx1)    #grille.addWidget(etiPres2, li, 0, 1, 2)
     hLayout0.addStretch()
     etiEx2= QLabel('==>')
     hLayout0.addWidget(etiEx2) 
     hLayout0.addStretch()
-    etiEx3= QLabel('<b>id;contact_tel;contact_mail<br>123;555;a@b.c</b>')
+    etiEx3= QLabel('id;<b>contact_tel;contact_mail</b><br>123;555;a@b.c')
     hLayout0.addWidget(etiEx3) 
     
     li += 1
+    hLayoutF= QHBoxLayout()
+    grille.addLayout(hLayoutF, li, 0, 1, 2)
     eti1= QLabel(self.tr("Choose the file"))
-    grille.addWidget(eti1, li, 0, 1, 1)
+    hLayoutF.addWidget(eti1) 
     self.choixFic= QgsFileWidget()
-    #self.choixFic.setFilePath("Choisir le fichier à afficher")
     self.choixFic.setFilter('*.json;;*.*')
     self.choixFic.setStorageMode(QgsFileWidget.GetFile)
     self.choixFic.fileChanged.connect( self.lireFic )
-    grille.addWidget(self.choixFic, li, 1, 1, 1)
+    hLayoutF.addWidget(self.choixFic) 
+    #    hLayoutF.addStretch()
+    etiNbLi= QLabel('    '+ self.tr("Preview") )
+    etiNbLi.setToolTip(self.tr("To Define the number of lines to display"))
+    hLayoutF.addWidget(etiNbLi)
+    self.sbNbRows= QSpinBox(self)
+    self.sbNbRows.setMinimum(1)
+    self.sbNbRows.setMaximum(10000)
+    self.sbNbRows.setValue(self.nbRows)
+    self.sbNbRows.setSuffix(' '+ self.tr("lines")) #self.sbNbRows.setPrefix(self.tr("Display") +' ')
+    self.sbNbRows.setToolTip(self.tr("Number of lines to display (Maximum: 10000)"))
+    def nbRowsChanged(val):
+      self.nbRows= self.sbNbRows.value()
+    self.sbNbRows.valueChanged[int].connect(nbRowsChanged)
+    hLayoutF.addWidget(self.sbNbRows)
     
     li += 1   ## The content of de JSON file
     self.edit= QsciScintilla(self)
@@ -94,81 +110,73 @@ class json2csv(QDialog):
     grille.addWidget(self.edit, li, 0, 1, 2)
     
     li += 1
-    hLayout1= QHBoxLayout()
-    grille.addLayout(hLayout1, li, 0, 1, 2)
-    #
-    etiOption= QLabel('<b>'+ self.tr("Options:") +' </b>')
-    hLayout1.addWidget(etiOption)
-    #
-    hLayout1.addStretch()
-    #
-    etiDelim= QLabel(self.tr("CSV delimiter"))
-    hLayout1.addWidget(etiDelim)
-    self.lDelim= QLineEdit(';',self)
-    self.lDelim.setToolTip(self.tr("Define the CSV delimiter"))
-    self.lDelim.setMaximumWidth(15)
-    hLayout1.addWidget(self.lDelim)
-    hLayout1.addStretch()
-    #
-    etiNbLi= QLabel(self.tr("Preview"))
-    etiNbLi.setToolTip(self.tr("To Define the number of lines to display"))
-    hLayout1.addWidget(etiNbLi)
-    self.sbNbRows= QSpinBox(self)
-    hLayout1.addWidget(self.sbNbRows)
-    self.sbNbRows.setMinimum(1)
-    self.sbNbRows.setMaximum(10000)
-    self.sbNbRows.setValue(self.nbRows)
-    self.sbNbRows.setSuffix(' '+ self.tr("lines")) #self.sbNbRows.setPrefix(self.tr("Display") +' ')
-    self.sbNbRows.setToolTip(self.tr("Number of lines to display (Maximum: 10000)"))
-    def nbRowsChanged(val):
-      self.nbRows= self.sbNbRows.value()
-    self.sbNbRows.valueChanged[int].connect(nbRowsChanged)
-    #
-    hLayout1.addStretch()
-    #
-    bReload= QPushButton(self.tr("Reload"))
-    bReload.clicked.connect(self.reloadFile)
-    hLayout1.addWidget(bReload)
-    #bPreview= QPushButton(self.tr("Update the preview below"))
-    #bPreview.clicked.connect(self.remplirTable)
-    #hLayout1.addWidget(bPreview) #  grille.addWidget(bPreview, li, 0, 1, 1)
-    
-    li += 1
+    eti2= QLabel( self.tr("If the JSON content has strange characters, try a different encoding:") )
+    grille.addWidget(eti2, li, 0, 1, 1)
     self.encod= 'utf-8'
     self.choixEncod= QComboBox()
     self.choixEncod.addItems( encodingList )
     self.choixEncod.setCurrentText(self.encod)
     self.choixEncod.addItems( sorted(list( set(aliases.values()) ) ) )
     self.choixEncod.currentTextChanged.connect( self.comboEncodageChanged )
-    grille.addWidget(self.choixEncod, li, 0, 1, 1)
-    eti2= QLabel('<- '+ self.tr("If the JSON content has strange characters, try a different encoding"))
-    grille.addWidget(eti2, li, 1, 1, 1)
+    grille.addWidget(self.choixEncod, li, 1, 1, 1)
+    
+    li += 1
+    hLayoutOpt= QHBoxLayout()
+    grille.addLayout(hLayoutOpt, li, 0, 1, 2)
+    #
+    etiOption= QLabel('<b>'+ self.tr("Option:") +' </b>')
+    hLayoutOpt.addWidget(etiOption)
+    #
+    etiConcat= QLabel( self.tr("Concatenate fieldnames with:") )
+    hLayoutOpt.addWidget(etiConcat)
+    self.lConcat= QLineEdit( self.concatFields, self )
+    self.lConcat.setToolTip(self.tr("Define the character to apply between concatenated fieldnames"))
+    self.lConcat.setMaximumWidth(20)
+    hLayoutOpt.addWidget(self.lConcat)
+    #
+    hLayoutOpt.addStretch()
+    #
+    bConvert= QPushButton('   '+ self.tr("Convert")+ '   ')
+    bConvert.clicked.connect(self.convert)
+    bConvert.setToolTip(self.tr("Convert the JSON with the chosen options"))
+    hLayoutOpt.addWidget(bConvert)
+    hLayoutOpt.addStretch()
     
     li += 1
     self.messageBar = QgsMessageBar(self)
     grille.addWidget(self.messageBar, li, 0, 1, 2)
     
-    li += 1
+    """li += 1
     self.csvView= QsciScintilla(self)
     self.csvView.setUtf8(True) # permet saisie des accents (requis meme pour cp1252)
     self.csvView.setMarginWidth(0, '9999') # Margin 0 is used for line numbers
     self.csvView.setMarginLineNumbers(0, True)
     self.csvView.setMarginWidth(1,1) # la marge entre num lignes et blocs
     self.csvView.setReadOnly(True)
-    grille.addWidget(self.csvView, li, 0, 1, 2)
+    grille.addWidget(self.csvView, li, 0, 1, 2) #"""
 
-    """li += 1
+    li += 1
     self.newView= QTableView() # Necessaire de le rendre global pour que l'objet ne soit pas supprimé quand la fonction action se termine !
     self.newView.setSelectionMode(QAbstractItemView.ExtendedSelection)
     self.newView.installEventFilter(self) # Voir self.eventFilter : pour traiter les Ctrl+C
     grille.addWidget(self.newView, li, 0, 1, 2) #"""
     
     li += 1
-    bSave= QPushButton(self.tr("Save to a CSV file"))
+    hLayoutS= QHBoxLayout()
+    grille.addLayout(hLayoutS, li, 0, 1, 2)
+    #
+    etiDelim= QLabel('     '+ self.tr("CSV delimiter") )
+    hLayoutS.addWidget(etiDelim)
+    self.lDelim= QLineEdit( self.delimiter, self )
+    self.lDelim.setToolTip(self.tr("Define the CSV delimiter"))
+    self.lDelim.setMaximumWidth(15)
+    hLayoutS.addWidget(self.lDelim)
+    hLayoutS.addStretch()
+    #
+    bSave= QPushButton('  '+ self.tr("Save to a CSV file") +'  ')
     bSave.clicked.connect(self.saveCSV)
     bSave.setToolTip(self.tr("Convert the JSON file to a CSV file"))
-    #hLayout1.addWidget(bSave) #grille.addWidget(bSave, li, 1, 1, 1)
-    grille.addWidget(bSave, li, 1, 1, 1)
+    hLayoutS.addWidget(bSave) #    grille.addWidget(bSave, li, 1, 1, 1)
     
     self.sep= ',' # Séparateur de champs par défaut
     self.data= None
@@ -178,11 +186,18 @@ class json2csv(QDialog):
 
 
   def lireFic(self, fic):
+    #self.csvView.setText("")
+    self.edit.setText('')
+    self.newView.setModel( QStandardItemModel() ) # Clear
+    QApplication.instance().processEvents()
+    
     if not QFile.exists(fic): return False
     debut=time.time()
     
     file= codecs.open(fic, 'rb')
     if not file: return False
+    
+    self.lignes= []
     
     self.data= bytearray()
     for row in range(1, self.nbRows+1):
@@ -206,9 +221,6 @@ class json2csv(QDialog):
       self.afficherTexte('utf-16')
     else:
       self.afficherTexte()
-    
-    #self.remplirTable()
-    self.convert()
 
 
   def afficherTexte(self, encodage=False): ## Décoder les lignes du fichier et les afficher dans l'éditeur
@@ -265,10 +277,12 @@ class json2csv(QDialog):
     #  self.edit.setReadOnly(True) # Empeche la modif du texte
     #else:
     #  self.edit.setReadOnly(False) # Autorise la modif du texte
+    return
 
 
 
   def convert(self): ## Convert the JSON file to CSV an show in preview
+    if self.choixFic.filePath() == '': return False
     fic= os.path.normpath( self.choixFic.filePath() )
     if not QFile.exists(fic): return False
     debut=time.time()
@@ -277,9 +291,18 @@ class json2csv(QDialog):
     if not file: return False
     js= json.load(file)
     
+    print( "Duree json.load :"+ str(time.time() - debut) )
     QApplication.instance().processEvents()
-    print( "Duree json.load :"+ str(time.time() - debut) ) #print( self.data )
     debut=time.time()
+    
+    delim= self.lDelim.text()
+    if delim=='':  delim= self.delimiter
+    
+    self.concatFields= self.lConcat.text()
+    if self.concatFields==delim:
+      msg= self.tr("You can't use the same character to concatenate fieldnames and for CSV delimiter")
+      self.messageBar.pushMessage( self.tr("Sorry")+" ", msg, Qgis.Warning, 30 )
+      return False
     
     """txt= ''
     nbLi= self.edit.lines()
@@ -303,8 +326,8 @@ class json2csv(QDialog):
     self.columns= []
     
     obj= js
-    field= '_noname_'
-    while True: # Inspect the "root" of the json
+    field= ''
+    while True: ## Inspect the "root" of the json :
       nb= len(obj)
       if isinstance(obj,list): # If it's a list :
         for elem in obj:
@@ -322,7 +345,7 @@ class json2csv(QDialog):
         obj= val # And continue with its child
         continue
       # Else :
-      self.lignes.append( self.flattenjson(obj) )
+      self.lignes.append( self.flattenjson(obj,'') )
       break
     
     """
@@ -358,15 +381,16 @@ class json2csv(QDialog):
       return False
     #"""
     #print( self.lignes )
-    for row in self.lignes:
+    for row in self.lignes: ## Populate the list of columns :
       for x in row.keys():
         if not x in self.columns: self.columns.append(x)
     #print("columns =", self.columns )
     
-    delim= self.lDelim.text()
-    if delim=='':  delim= self.delimiter
+    print( "Duree convert to CSV :"+ str(time.time() - debut) )
+    QApplication.instance().processEvents()
+    debut=time.time()
     
-    csv= delim.join(self.columns)  +"\n"
+    """csv= delim.join(self.columns)  +"\n"
     nl= 0
     for row in self.lignes:
       li= map(lambda x: row.get(x,""), self.columns)
@@ -378,28 +402,125 @@ class json2csv(QDialog):
     
     self.csvView.setText(csv)
     
-    print( "Duree convert to CSV :"+ str(time.time() - debut) ) #print( self.data )
+    print( "Duree affichage du CSV :"+ str(time.time() - debut) )
+    QApplication.instance().processEvents()
+    debut=time.time()    #"""
+    
+    self.remplirTable()
+    
+    print( "Duree affichage de la table :"+ str(time.time() - debut) )
 
 
-  def flattenjson(self, dico, field='_noname_'):
-    if not isinstance(dico, dict):
-      #print(dico.__class__.__name__, dico)
+  def flattenjson(self, dico, field=''):
+    val= {} #OrderedDict() # {}
+    
+    if isinstance(dico, list):
+      if field=='': field= 'field'+ self.concatFields
+      else: field= field + self.concatFields
+      #print(field +': list=',dico)
+      n= 1;
+      for elem in dico:
+        children= self.flattenjson( elem, field + str(n) )
+        val.update(children)
+        n+=1
+      return val
+    
+    if not isinstance(dico, dict): # It is not a list nor a dict
+      #print(field +': '+ dico.__class__.__name__, dico)
       return {field:dico}
     
-    #print('dict=',dico)
-    #"""
+    if field != '': field= field + self.concatFields
+    
+    #print(field +': dict=',dico)
+    for K, V in dico.items():
+      children= self.flattenjson(V, field + K)
+      val.update(children)
+    return val
+
+  def OLD_flattenjson(self, dico, field='_noname_'):
     val= OrderedDict() # {}
-    for i in dico.keys():
-      #if isinstance(dico[i], list):
-      #  val[i]= self.flattenjson(dico[i], self.concatFields)
-      if isinstance(dico[i], dict):
-        get = self.flattenjson(dico[i], self.concatFields)
-        for j in get.keys():
-          val[i + self.concatFields + j] = get[j]
+    """
+    1er iter: dico= [ [43,39], [55,49] ]  field='flights'  elem1= [43, 39]
+    2e  iter: dico= [43,39]   field='flights_1'  elem1= 43
+    3e  iter: dico= 43  field='flights_1_1'  return {'flights_1_1':43}
+    #"""
+    if isinstance(dico, list):
+      print('list=',dico)
+      n= 1;
+      for elem in dico:
+        children= self.flattenjson(elem, field + self.concatFields + str(n))
+        for childK, childV in children.items(): # Flattening all elem children into val
+          #val[field + self.concatFields + str(n)]= 
+          val[childK]= childV
+        n+=1
+      return val
+    
+    if not isinstance(dico, dict):
+      print(dico.__class__.__name__, dico)
+      return {field:dico}
+    
+    print('dict=',dico)
+    for K, V in dico.items():
+      if isinstance(V,dict):
+        children= self.flattenjson(V, K)
+        for childK, childV in children.items(): # Flattening all V children into val
+          val[K + self.concatFields + childK]= childV
+      
+      elif isinstance(V,list):
+        children= self.flattenjson(V, K)
+        for childK, childV in children.items(): # Flattening all V children into val
+          val[childK]= childV
+      
       else:
-        val[i] = dico[i]
+        val[K] = V
     
     return val
+
+
+  def remplirTable(self):
+    nbLi= len(self.lignes)
+    model= QStandardItemModel()
+    # Header
+    model.setHorizontalHeaderLabels( self.columns )
+
+    model.setRowCount( min(self.nbRows,nbLi) )
+    """### Chercher le séparateur et compter le nombre de colonnes :
+    self.sep= ','
+    li= self.edit.text(0)
+    if li.count(';') > li.count(self.sep): # s'il y a plus de ; que de virgules
+      self.sep= ';'
+    if li.count('\t') > li.count(self.sep): # s'il y a plus de tabu que de virgules ou de ;
+      self.sep= '\t'
+    columns= li.split(self.sep)
+    nbCol= len(columns) #"""
+    nbCol= len(self.columns)
+    model.setColumnCount(nbCol)
+    
+    """numCol= 0
+    for col in self.columns: # Header
+      item= QStandardItem( col )
+      item.setTextAlignment( Qt.AlignCenter | Qt.AlignVCenter)
+      model.setItem(0, numCol, item)
+      numCol += 1 #"""
+    
+    ## Populate the table :
+    numLi= 0
+    for row in self.lignes:
+      columns= map(lambda x: row.get(x,""), self.columns)
+      numCol= 0
+      for col in columns:
+        item= QStandardItem( str(col) )
+        item.setTextAlignment( Qt.AlignCenter | Qt.AlignVCenter)
+        model.setItem(numLi, numCol, item)
+        numCol += 1
+      numLi += 1
+      if numLi == self.nbRows: break
+    
+    self.newView.setModel(model)
+    #self.newView.verticalHeader().setDefaultSectionSize(17)
+    #self.newView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch);
+    #self.newView.resizeColumnsToContents();
+    #self.newView.resizeRowsToContents();
 
 
 
@@ -410,17 +531,26 @@ class json2csv(QDialog):
   def comboEncodageChanged(self, txt): # encoding defini par le choix du user dans le combobox "choixEncod"
     self.encod= txt
     if self.data:
-      self.afficherTexte( self.encod )
-      self.convert()
+      self.afficherTexte( self.encod )      #self.convert()
 
 
 
   def saveCSV(self, checked=False):
     self.messageBar.clearWidgets()
+    
+    if self.lignes == []:  return False
+    
     if self.errEncodage: # Si les erreurs d'encodage n'ont pas été corrigées, refuser le save
       msg= self.tr("You can't save the file with this encoding: %s. Please choose another one!") % self.encod
       showMore= self.tr("The original file was saved with another encoding.\n\nYou may find it by trying other encodings in the list above.")
       self.messageBar.pushMessage( self.tr("Stop"), msg, showMore, Qgis.Critical, 10 )
+      return False
+    
+    delim= self.lDelim.text()
+    if delim=='':  delim= self.delimiter
+    if self.concatFields==delim:
+      msg= self.tr("you can't use the same character for CSV delimiter and to concatenate fieldnames")
+      self.messageBar.pushMessage( self.tr("Warning")+" ", msg, Qgis.Warning, 30 )
       return False
     
     fic= os.path.normpath( self.choixFic.filePath() )
@@ -447,8 +577,6 @@ class json2csv(QDialog):
       self.messageBar.pushMessage( self.tr("Failed")+" ", msg, Qgis.Critical, 30 )
       return False
     
-    delim= self.lDelim.text()
-    if delim=='':  delim= self.delimiter
     #with open(new, 'wb') as newFile:
     csv_w = csv.writer(newFile, delimiter=delim, quotechar='"', quoting=csv.QUOTE_MINIMAL)
     csv_w.writerow(self.columns)
@@ -525,44 +653,3 @@ class json2csv(QDialog):
 
 
 
-
-
-  def remplirTable(self):
-    nbLi= self.edit.lines()
-    model= QStandardItemModel()
-    model.setRowCount(nbLi)
-    
-    ### Chercher le séparateur et compter le nombre de colonnes :
-    self.sep= ','
-    li= self.edit.text(0)
-    if li.count(';') > li.count(self.sep): # s'il y a plus de ; que de virgules
-      self.sep= ';'
-    if li.count('\t') > li.count(self.sep): # s'il y a plus de tabu que de virgules ou de ;
-      self.sep= '\t'
-    columns= li.split(self.sep)
-    nbCol= len(columns)
-    model.setColumnCount(nbCol)
-    
-    ### Remplir la table :
-    for row in range(nbLi):
-      li= self.edit.text(row)
-      if len(li)>1: li= li[:-1] # On enleve le retour à la ligne final
-      columns= li.split(self.sep)
-      nb= len(columns)
-      if nbCol < nb:
-        nbCol= nb
-        model.setColumnCount(nbCol)
-      
-      for col in range(nb):
-        item= QStandardItem( columns[col] )
-        item.setTextAlignment( Qt.AlignCenter | Qt.AlignVCenter)
-        model.setItem(row, col, item)
-    
-    if li=='': # Si la derniere ligne est vide, ne pas en tenir compte
-      model.setRowCount(nbLi-1)
-    
-    self.newView.setModel(model)
-    #self.newView.verticalHeader().setDefaultSectionSize(17)
-    self.newView.resizeColumnsToContents();
-    self.newView.resizeRowsToContents();
-    #self.newView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch);

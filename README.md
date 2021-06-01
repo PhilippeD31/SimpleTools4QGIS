@@ -1,4 +1,4 @@
-# Simple tools -- Outils simples
+# Simple tools -- Couteau suisse pour QGIS
 **A plugin for QGIS**  
 A collection of simple tools for QGIS :  
 -- Categorized style from CSV  

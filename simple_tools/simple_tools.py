@@ -97,7 +97,12 @@ class plugin:
     
     self.jConv= QAction( QIcon( icons +'json.png'), self.tr("Convert JSON to CSV"), iface.mainWindow() )
     self.jConv.triggered.connect(self.showJsonConv)
-    self.pluginMenu.addAction( self.jConv )  #iface.addToolBarIcon(self.jConv)
+    self.pluginMenu.addAction( self.jConv )    #iface.addToolBarIcon(self.jConv)
+    
+    self.CategorizedStyle= QAction( QIcon(icons+'help.png'),
+      self.tr('Categorized style from CSV'), iface.mainWindow() )
+    self.CategorizedStyle.triggered.connect( showHelp )
+    self.pluginMenu.addAction( self.CategorizedStyle )
     
     self.actionAide= QAction( QIcon( icons +'help.png'),
       self.tr('Help (plugin version %s)')% PluginVersion, iface.mainWindow() )
@@ -110,7 +115,9 @@ class plugin:
   def unload(self):
     self.pluginMenu.parentWidget().removeAction(self.pluginMenu.menuAction()) # Remove from Extension menu
     #if hasattr(self, 'actionEditor'):  iface.removeToolBarIcon(self.actionEditor)
-    #if hasattr(self, 'jConv'):  iface.removeToolBarIcon(self.jConv)
+    try:
+      if hasattr(self,'jConv'):  iface.removeToolBarIcon(self.jConv)
+    except: pass
     try: QgsApplication.processingRegistry().removeProvider(self.provider)
     except: pass
 

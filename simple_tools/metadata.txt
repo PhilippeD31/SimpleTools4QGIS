@@ -1,7 +1,7 @@
 [general]
 name=Simple tools
 name[fr]=Couteau suisse pour QGIS
-version=0.3.0
+version=0.4.1
 qgisMinimumVersion=3.10
 hasProcessingProvider=yes
 
@@ -12,7 +12,9 @@ about=## In Processing toolbox > <b>Styling helper</b> :<br>-- <b>Categorized st
 
 about[fr]=## Dans Traitement > Boîte à outils > <b>Assistant de styles</b> :<br>-- <b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les codes, libellés et couleurs) pour donner un style catégorisé à une couche vecteur<br><br>## Dans le menu Extensions > <b>Couteau suisse pour QGIS</b> :<br>-- <b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.  <br>-- <b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.
 
-changelog=0.3.0 3rd tool: Convert JSON to CSV
+changelog=0.4.1 JSON converter: displays the CSV in a table
+ 0.4.0 Improvement of the JSON converter: flattens objects and lists
+ 0.3.0 3rd tool: Convert JSON to CSV
  0.2.1 Small improvement
  0.2.0 2nd tool : Inspect BIG csv (or text) files
  0.1.0 First tool: Categorized style from CSV

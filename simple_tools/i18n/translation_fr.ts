@@ -247,82 +247,82 @@ Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</t
 <context>
     <name>json2csv</name>
     <message>
-        <location filename="../json2csv.py" line="49"/>
+        <location filename="../json2csv.py" line="50"/>
         <source>Convert a JSON file to CSV</source>
         <translation>Convertir un fichier JSON en CSV</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="58"/>
+        <location filename="../json2csv.py" line="59"/>
         <source>Convert JSON to CSV by flattening the json tree</source>
         <translation>Convertir du JSON en CSV en aplatissant l&apos;arbre json</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="61"/>
+        <location filename="../json2csv.py" line="62"/>
         <source>Sub level branches are converted to simple fields and their fieldnames are concatenated (separated by &apos;_&apos;)</source>
         <translation>Les sous-niveaux sont convertis en simples champs avec leurs noms concaténés (séparés par &apos;_&apos;)</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="65"/>
+        <location filename="../json2csv.py" line="80"/>
         <source>Choose the file</source>
         <translation>Choisir le fichier</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="88"/>
-        <source>Options:</source>
-        <translation>Options :</translation>
+        <location filename="../json2csv.py" line="127"/>
+        <source>Option:</source>
+        <translation>Option :</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="93"/>
+        <location filename="../json2csv.py" line="168"/>
         <source>CSV delimiter</source>
         <translation>Délimiteur CSV</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="96"/>
+        <location filename="../json2csv.py" line="171"/>
         <source>Define the CSV delimiter</source>
         <translation>Définir le délimiteur des champs du CSV</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="101"/>
+        <location filename="../json2csv.py" line="88"/>
         <source>Preview</source>
         <translation>Aperçu</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="102"/>
+        <location filename="../json2csv.py" line="89"/>
         <source>To Define the number of lines to display</source>
         <translation>Choisir le nombre de lignes à afficher</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="109"/>
+        <location filename="../json2csv.py" line="95"/>
         <source>lines</source>
         <translation>lignes</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="110"/>
+        <location filename="../json2csv.py" line="96"/>
         <source>Number of lines to display (Maximum: 10000)</source>
         <translation>Nombre de lignes à afficher (Maximum : 10000)</translation>
     </message>
     <message>
         <location filename="../json2csv.py" line="117"/>
         <source>Reload</source>
-        <translation>Rafraichir</translation>
+        <translation type="obsolete">Rafraichir</translation>
     </message>
     <message>
         <location filename="../json2csv.py" line="132"/>
         <source>If the JSON content has strange characters, try a different encoding</source>
-        <translation>Si le contenu du JSON affiche des caractères bizarres, essayer un encodage différent</translation>
+        <translation type="obsolete">Si le contenu du JSON affiche des caractères bizarres, essayer un encodage différent</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="157"/>
+        <location filename="../json2csv.py" line="178"/>
         <source>Convert the JSON file to a CSV file</source>
         <translation>Convertir le fichier JSON en un fichier CSV</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="251"/>
+        <location filename="../json2csv.py" line="275"/>
         <source>You may change the encoding above in order to correct the ufffd</source>
         <translation>Vous devriez changer l&apos;encodage défini ci-dessus pour corriger les \ufffd</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="252"/>
+        <location filename="../json2csv.py" line="276"/>
         <source>When reading the file with encoding %s 
  some characters were not reconized 
  and they are printed as ufffd 
@@ -333,17 +333,17 @@ Which means that the file was saved with a different encoding.</source>
 Cela veut dire que le fichier a été créé avec un autre encodage.</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="253"/>
+        <location filename="../json2csv.py" line="277"/>
         <source>Attention </source>
         <translation>Attention </translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="410"/>
+        <location filename="../json2csv.py" line="548"/>
         <source>You can&apos;t save the file with this encoding: %s. Please choose another one!</source>
         <translation>Vous ne pouvez pas enregistrer ce fichier avec l&apos;encodage %s. Il faut le changer !</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="411"/>
+        <location filename="../json2csv.py" line="549"/>
         <source>The original file was saved with another encoding.
 
 You may find it by trying other encodings in the list above.</source>
@@ -352,55 +352,100 @@ You may find it by trying other encodings in the list above.</source>
 Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="412"/>
+        <location filename="../json2csv.py" line="550"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="417"/>
+        <location filename="../json2csv.py" line="562"/>
         <source>Enter the name of the new file</source>
         <translation>Saisir le nom du nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="422"/>
+        <location filename="../json2csv.py" line="567"/>
         <source>Sorry, you can&apos;t save with the same path et file name!</source>
         <translation>Désolé, vous ne pouvez pas enregistrer avec le même chemin et nom de fichier !</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="436"/>
+        <location filename="../json2csv.py" line="581"/>
         <source>Failed</source>
         <translation>Echec</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="427"/>
+        <location filename="../json2csv.py" line="572"/>
         <source>Saving in progress</source>
         <translation>Enregistrement en cours</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="427"/>
+        <location filename="../json2csv.py" line="572"/>
         <source>it may take a long time if the file is big...</source>
         <translation>si le fichier est gros cela peut être long...</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="487"/>
+        <location filename="../json2csv.py" line="630"/>
         <source>The file was successfully saved</source>
         <translation>Le fichier a bien été enregistré</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="488"/>
+        <location filename="../json2csv.py" line="631"/>
         <source>Success</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../json2csv.py" line="155"/>
+        <location filename="../json2csv.py" line="176"/>
         <source>Save to a CSV file</source>
         <translation>Enregistrer dans un fichier CSV</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="113"/>
+        <source>If the JSON content has strange characters, try a different encoding:</source>
+        <translation>Si le contenu du CSV affiche des caractères bizarres, essayer un encodage différent :</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="130"/>
+        <source>Concatenate fieldnames with:</source>
+        <translation>Concaténer les noms des champs avec :</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="133"/>
+        <source>Define the character to apply between concatenated fieldnames</source>
+        <translation>Définir le caractère à utiliser entre les noms de champs concaténés</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="139"/>
+        <source>Convert</source>
+        <translation>Convertir</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="141"/>
+        <source>Convert the JSON with the chosen options</source>
+        <translation>Convertir le JSON avec les options choisies</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="304"/>
+        <source>You can&apos;t use the same character to concatenate fieldnames and for CSV delimiter</source>
+        <translation>Vous ne pouvez pas utiliser le même caractère pour concaténer les noms de champs et pour le délimiteur CSV</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="305"/>
+        <source>Sorry</source>
+        <translation>Désolé</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="556"/>
+        <source>you can&apos;t use the same character for CSV delimiter and to concatenate fieldnames</source>
+        <translation>Vous ne pouvez pas utiliser le même caractère pour le délimiteur CSV et pour concaténer les noms de champs</translation>
+    </message>
+    <message>
+        <location filename="../json2csv.py" line="557"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
     </message>
 </context>
 <context>
     <name>plugin</name>
     <message>
-        <location filename="../simple_tools.py" line="118"/>
+        <location filename="../simple_tools.py" line="125"/>
         <source>Styling helper</source>
         <translation>Assistant de styles</translation>
     </message>
@@ -415,7 +460,7 @@ Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</t
         <translation>Inspecter les 1ères lignes d&apos;un gros fichier CSV ou texte</translation>
     </message>
     <message>
-        <location filename="../simple_tools.py" line="102"/>
+        <location filename="../simple_tools.py" line="107"/>
         <source>Help (plugin version %s)</source>
         <translation>Aide (plugin version %s)</translation>
     </message>
@@ -423,6 +468,11 @@ Il faut le retrouver en essayant d&apos;autres choix dans la liste ci-dessus.</t
         <location filename="../simple_tools.py" line="98"/>
         <source>Convert JSON to CSV</source>
         <translation>Convertir du JSON en CSV</translation>
+    </message>
+    <message>
+        <location filename="../simple_tools.py" line="102"/>
+        <source>Categorized style from CSV</source>
+        <translation>Style catégorisé à partir d&apos;un CSV</translation>
     </message>
 </context>
 </TS>
