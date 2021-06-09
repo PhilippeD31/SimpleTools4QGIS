@@ -1,18 +1,20 @@
 [general]
 name=Simple tools
 name[fr]=Couteau suisse pour QGIS
-version=0.4.1
+version=0.4.2
 qgisMinimumVersion=3.10
 hasProcessingProvider=yes
 
 description=A collection of simple tools for QGIS.
 description[fr]=Conçu comme une collection d'outils simples. Une sorte de "couteau suisse" pour QGIS.
 
-about=## In Processing toolbox > <b>Styling helper</b> :<br>-- <b>Categorized style from CSV</b><br><br>## In Plugins menu > <b>Simple tools</b> :<br>-- <b>Inspect BIG csv (or text) files</b> by quickly showing their first rows.  <br>-- <b>Convert JSON to CSV</b>: flatten a json tree
+about=## In Processing toolbox > <b>Styling helper</b> :<br>-- <b>Categorized style from CSV</b>: use a CSV file to define the style (categories,labels,colors) of a vector layer<br>     <br>## In Plugins menu > <b>Simple tools</b> :<br>-- <b>Inspect BIG csv (or text) files</b> by quickly showing their first rows.  <br>-- <b>Convert JSON to CSV</b>: flatten a json tree.   <table border=1 cellpadding=3 cellspacing=0> <tr style="text-align:center"><td>JSON</td><td>CSV</td></tr>	<tr> <td> [<br>&nbsp;&nbsp; {"id":1, "color":"red"},<br>&nbsp;&nbsp; {"id":2, "color":"blue"}<br> ]</td>		<td>id,color<br>1,red<br>2,blue</td>	</tr>	<tr> <td> { "id":123, <b>"contact": {"tel":555, "mail":"a@b.c"}</b> }</td>		<td>id;<b>contact_tel</b>;<b>contact_mail</b><br>123;555;a@b.c</td>	</tr> </table>
 
-about[fr]=## Dans Traitement > Boîte à outils > <b>Assistant de styles</b> :<br>-- <b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les codes, libellés et couleurs) pour donner un style catégorisé à une couche vecteur<br><br>## Dans le menu Extensions > <b>Couteau suisse pour QGIS</b> :<br>-- <b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.  <br>-- <b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.
+about[fr]=## Dans Traitement > Boîte à outils > <b>Assistant de styles</b> :<br>-- <b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les codes, libellés et couleurs) pour donner un style catégorisé à une couche vecteur<br>    <br>## Dans le menu Extensions > <b>Couteau suisse pour QGIS</b> :<br>-- <b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.  <br>-- <b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.   <table border=1 cellpadding=3 cellspacing=0> <tr style="text-align:center"><td>JSON</td><td>CSV</td></tr>	<tr> <td> [<br>&nbsp;&nbsp; {"id":1, "color":"red"},<br>&nbsp;&nbsp; {"id":2, "color":"blue"}<br> ]</td>		<td>id,color<br>1,red<br>2,blue</td>	</tr>	<tr> <td> { "id":123, <b>"contact": {"tel":555, "mail":"a@b.c"}</b> }</td>		<td>id;<b>contact_tel</b>;<b>contact_mail</b><br>123;555;a@b.c</td>	</tr> </table>
 
-changelog=0.4.1 JSON converter: displays the CSV in a table
+
+changelog=0.4.2 More detailed help
+ 0.4.1 JSON converter: displays the CSV in a table
  0.4.0 Improvement of the JSON converter: flattens objects and lists
  0.3.0 3rd tool: Convert JSON to CSV
  0.2.1 Small improvement

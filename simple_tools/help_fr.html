@@ -1,7 +1,12 @@
 <html>
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=utf-8">
-<title>Couteau suisse QGIS</title>
+	<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+	<title>Couteau suisse QGIS</title>
+	<style>
+		h3 {margin-bottom:10px}
+		ul {margin-top:0}
+		li {margin-bottom:8px}
+	</style>
 </head>
 <body style='font-family:Verdana,Arial;font-size:0.9em'>
 
@@ -12,16 +17,38 @@ La liste des outils proposés devrait s'allonger au cours du temps :</p>
 
 
 <h3>Dans Traitement > Boîte à outils > <u>Assistant de styles</u></h3>
-<ul style="margin-top:0">
-	<li><b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les codes, libellés et couleurs) pour donner un style catégorisé à une couche vecteur</li>
+<ul>
+	<li><b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les valeurs, libellés et couleurs) pour donner un style catégorisé à une couche vecteur
+		<br>Contenu du CSV: valeurs (du champ) ; libellés (des catégories) ; couleurs
+		<br>Exemple :
+		<br>&nbsp;&nbsp; BL;blé;#eee22c
+		<br>&nbsp;&nbsp; OR;orge;#47a266
+		<br>Choisir la couche cible et indiquer le champ à utiliser pour les catégories
+	</li>
 </ul>
 <br>
 
-<h3 id="fonctions">Dans le menu Extensions > <u>Couteau suisse pour QGIS</u></h3>
-<ul style="margin-top:0">
+
+<h3>Dans le menu Extensions > <u>Couteau suisse pour QGIS</u></h3>
+<ul>
 	<li><b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.</li>
-	<li><b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.</li>
+	<li><b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.
+		<br>Si le 1er niveau du JSON est une liste, chaque élément de celle-ci donnera 1 ligne du CSV
+		<br>Le contenu de chaque élément (et sous-éléments) sera transformé en colonnes du CSV
+	</li>
 </ul>
+
+<table border=1 cellpadding=3 cellspacing=0> <tr style="text-align:center"><td>JSON</td><td>CSV</td></tr>
+	<tr> <td> [<br>&nbsp;&nbsp; {"id":1, "color":"red"},<br>&nbsp;&nbsp; {"id":2, "color":"blue"}<br> ]</td>
+		<td>id,color<br>1,red<br>2,blue</td>
+	</tr>
+	<tr> <td> { "id":123, <b>"contact": {"tel":555, "mail":"a@b.c"}</b> }</td>
+		<td>id;<b>contact_tel</b>;<b>contact_mail</b><br>123;555;a@b.c</td>
+	</tr>
+	<tr> <td> { "shades":<br>&nbsp;&nbsp; [<br>&nbsp;&nbsp;&nbsp;&nbsp; {"id":1, "color":"red"},<br>&nbsp;&nbsp;&nbsp;&nbsp; {"id":2, "color":"blue"}<br>&nbsp;&nbsp; ]<br>} </td>
+		<td>shades,shades_id,shades_color<br>,1,red<br>,2,blue</td>
+	</tr>
+</table>
 
 <br><br><br>
 </body>

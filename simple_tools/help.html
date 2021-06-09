@@ -2,6 +2,11 @@
 <head>
 	<meta http-equiv=Content-Type content="text/html; charset=utf-8">
 	<title>Simple tools</title>
+	<style>
+		h3 {margin-bottom:10px}
+		ul {margin-top:0}
+		li {margin-bottom:8px}
+	</style>
 </head>
 <body style='font-family:Verdana,Arial;font-size:0.9em'>
 
@@ -12,16 +17,38 @@ The list of available tools should grow over time :</p>
 
 
 <h3>In Processing toolbox > <u>Styling helper</u></h3>
-<ul style="margin-top:0">
-	<li><b>Categorized style from CSV</b>: use a CSV file to define the style of a vector layer.</li>
+<ul>
+	<li><b>Categorized style from CSV</b>: use a CSV file to define the style (categories,labels,colors) of a vector layer.
+		<br>CSV content: values (of the field) ; labels ; colors
+		<br>Example :
+		<br>&nbsp;&nbsp; WH;wheat;#eee22c
+		<br>&nbsp;&nbsp; CO;corn;#47a266
+		<br>Choose the target layer, choose it's field to be used for the categories
+	</li>
 </ul>
 <br>
 
-<h3 id="menu">In Plugins menu > <u>Simple tools</u></h3>
-<ul style="margin-top:0">
+
+<h3>In Plugins menu > <u>Simple tools</u></h3>
+<ul>
 	<li><b>Inspect BIG csv (or text) files</b> by quickly showing their first rows</li>
-	<li><b>Convert JSON to CSV</b>: flatten a json tree</li>
+	<li><b>Convert JSON to CSV</b>: flatten a json tree
+		<br>If the 1st level of the JSON is a list, each element will become 1 row in the CSV
+		<br>The content of each element (et sub-elements) will be transformed into columns in the CSV
+	</li>
 </ul>
+
+<table border=1 cellpadding=3 cellspacing=0> <tr style="text-align:center"><td>JSON</td><td>CSV</td></tr>
+	<tr> <td> [<br>&nbsp;&nbsp; {"id":1, "color":"red"},<br>&nbsp;&nbsp; {"id":2, "color":"blue"}<br> ]</td>
+		<td>id,color<br>1,red<br>2,blue</td>
+	</tr>
+	<tr> <td> { "id":123, <b>"contact": {"tel":555, "mail":"a@b.c"}</b> }</td>
+		<td>id;<b>contact_tel</b>;<b>contact_mail</b><br>123;555;a@b.c</td>
+	</tr>
+	<tr> <td> { "shades":<br>&nbsp;&nbsp; [<br>&nbsp;&nbsp;&nbsp;&nbsp; {"id":1, "color":"red"},<br>&nbsp;&nbsp;&nbsp;&nbsp; {"id":2, "color":"blue"}<br>&nbsp;&nbsp; ]<br>} </td>
+		<td>shades,shades_id,shades_color<br>,1,red<br>,2,blue</td>
+	</tr>
+</table>
 
 <br><br><br>
 </body>
