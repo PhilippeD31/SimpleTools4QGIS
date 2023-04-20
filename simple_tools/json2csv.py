@@ -135,9 +135,16 @@ class json2csv(QDialog):
     hLayoutOpt.addWidget(self.lConcat)
     #
     hLayoutOpt.addStretch()
+    
+    self.listRoot= QComboBox()
+    self.listRoot.setSizeAdjustPolicy(QComboBox.AdjustToContents)
+    self.listRoot.addItem( self.tr("Start from child branch:"), -1 )
+    #self.listRoot.currentIndexChanged.connect( self.listRootChanged )
+    hLayoutOpt.addWidget(self.listRoot)
+    hLayoutOpt.addStretch()
     #
-    bConvert= QPushButton('   '+ self.tr("Convert")+ '   ')
-    bConvert.clicked.connect(self.convert)
+    bConvert= QPushButton('   '+ self.tr("Refresh")+ '   ') # self.tr("Convert")
+    bConvert.released.connect(self.convert)
     bConvert.setToolTip(self.tr("Convert the JSON with the chosen options"))
     hLayoutOpt.addWidget(bConvert)
     hLayoutOpt.addStretch()
@@ -188,6 +195,10 @@ class json2csv(QDialog):
   def lireFic(self, fic):
     #self.csvView.setText("")
     self.edit.setText('')
+    self.listRoot.clear()
+    self.listRoot.addItem( self.tr("Start from child branch:"), -1 )
+    self.jsonStart = -1
+    self.listBranches = {}
     self.newView.setModel( QStandardItemModel() ) # Clear
     QApplication.instance().processEvents()
     
@@ -221,6 +232,7 @@ class json2csv(QDialog):
       self.afficherTexte('utf-16')
     else:
       self.afficherTexte()
+
 
 
   def afficherTexte(self, encodage=False): ## Décoder les lignes du fichier et les afficher dans l'éditeur
@@ -277,22 +289,34 @@ class json2csv(QDialog):
     #  self.edit.setReadOnly(True) # Empeche la modif du texte
     #else:
     #  self.edit.setReadOnly(False) # Autorise la modif du texte
-    return
+    self.convert(False)
 
 
 
-  def convert(self): ## Convert the JSON file to CSV an show in preview
+  def convert(self, refresh=True): ## Convert the JSON file to CSV an show in preview
     if self.choixFic.filePath() == '': return False
-    fic= os.path.normpath( self.choixFic.filePath() )
-    if not QFile.exists(fic): return False
     debut=time.time()
     
-    file= codecs.open(fic, 'r', self.encod, 'ignore')
-    if not file: return False
-    js= json.load(file)
+    if self.listRoot.count()>1: # currentText
+      self.jsonStart = self.listRoot.currentData()
+      if self.jsonStart != -1:
+        self.jsonStart = self.listBranches[self.jsonStart]
     
-    print( "Duree json.load :"+ str(time.time() - debut) )
-    QApplication.instance().processEvents()
+    if self.jsonStart == -1 or not refresh:
+      fic= os.path.normpath( self.choixFic.filePath() )
+      if not QFile.exists(fic): return False
+      
+      file = codecs.open(fic, 'r', self.encod, 'ignore')
+      if not file: return False
+      js = json.load(file)
+      file.close()
+      print( "Duree json.load :"+ str(time.time() - debut) )
+      QApplication.instance().processEvents()
+      
+    else:
+      js = self.jsonStart
+    
+    #print( "js =", js )
     debut=time.time()
     
     delim= self.lDelim.text()
@@ -304,26 +328,8 @@ class json2csv(QDialog):
       self.messageBar.pushMessage( self.tr("Sorry")+" ", msg, Qgis.Warning, 30 )
       return False
     
-    """txt= ''
-    nbLi= self.edit.lines()
-    for row in range(nbLi):
-      li= self.edit.text(row)
-      if len(li)>1: li= li[:-1] # On enleve le retour à la ligne final
-      txt += li
-    js = json.loads(txt) """
-    """
-    input = map(lambda x: self.flattenjson(x,"_"), js)
-    self.lignes= []
-    self.columns= []
-    for row in input:
-      self.lignes.append(row)
-      for x in row.keys():
-        if not x in self.columns: self.columns.append(x)
-    #"""
-    #columns = [x for row in input for x in row.keys()]
-    #columns = list(set(columns))
-    self.lignes= []
-    self.columns= []
+    self.lignes = []
+    self.columns = []
     
     obj= js
     field= ''
@@ -338,13 +344,18 @@ class json2csv(QDialog):
         self.lignes.append( {field:obj} )
         break
       
-      for field,val in obj.items(): break # Get the "first" item
-      
       if nb==1: # If it's a root elem without siblings :
+        for field,val in obj.items(): break # Get the "first" item
         self.columns.append(field) # Store its fieldname for CSV
         obj= val # And continue with its child
         continue
       # Else :
+      if not refresh: # self.listRoot.count()==0:  #self.jsonStart is None:
+        for field,val in obj.items():
+          #print(field, '=', val)
+          if isinstance(val,dict) or isinstance(val,list):
+            self.listBranches[field] = val
+            self.listRoot.addItem(field,field)
       self.lignes.append( self.flattenjson(obj,'') )
       break
     
@@ -409,10 +420,24 @@ class json2csv(QDialog):
     self.remplirTable()
     
     print( "Duree affichage de la table :"+ str(time.time() - debut) )
+    
+    if not refresh and self.listRoot.count()>0:
+      #self.listRoot.insertItem( 0, self.tr("Start from child branch:"), -1 )
+      self.listRoot.setCurrentIndex(0)
+
+
+
+  def listRootChanged(self, id): # encoding defini par le choix du user dans le combobox "listRoot"
+    if self.listRoot.count()==0:  return
+    self.jsonStart = self.listRoot.currentData()
+    print( "listRoot.currentData =", self.jsonStart )
+    if self.jsonStart == -1:  self.jsonStart = None
+    self.convert(True)
+
 
 
   def flattenjson(self, dico, field=''):
-    val= {} #OrderedDict() # {}
+    val = {} # OrderedDict()
     
     if isinstance(dico, list):
       if field=='': field= 'field'+ self.concatFields
@@ -435,6 +460,35 @@ class json2csv(QDialog):
     for K, V in dico.items():
       children= self.flattenjson(V, field + K)
       val.update(children)
+    return val
+
+
+  def ZZZflattenjson(self, dico, field=''):
+    val = OrderedDict() # {}
+    
+    if isinstance(dico, list):
+      if field=='': field= 'field'+ self.concatFields
+      else: field= field + self.concatFields
+      print(field +': list=',dico)
+      n= 1;
+      for elem in dico:
+        children= self.flattenjson( elem, field + str(n) )
+        for K, V in children.items(): val[K] = V
+        #val.update(children)
+        n+=1
+      return val
+    
+    if not isinstance(dico, dict): # It is not a list nor a dict
+      #print(field +': '+ dico.__class__.__name__, dico)
+      return {field:dico}
+    
+    if field != '': field= field + self.concatFields
+    
+    #print(field +': dict=',dico)
+    for K, V in dico.items():
+      children= self.flattenjson(V, field + K)
+      for K, V in children.items(): val[K] = V
+      #val.update(children)
     return val
 
   def OLD_flattenjson(self, dico, field='_noname_'):
@@ -477,6 +531,7 @@ class json2csv(QDialog):
     return val
 
 
+
   def remplirTable(self):
     nbLi= len(self.lignes)
     model= QStandardItemModel()
@@ -484,24 +539,8 @@ class json2csv(QDialog):
     model.setHorizontalHeaderLabels( self.columns )
 
     model.setRowCount( min(self.nbRows,nbLi) )
-    """### Chercher le séparateur et compter le nombre de colonnes :
-    self.sep= ','
-    li= self.edit.text(0)
-    if li.count(';') > li.count(self.sep): # s'il y a plus de ; que de virgules
-      self.sep= ';'
-    if li.count('\t') > li.count(self.sep): # s'il y a plus de tabu que de virgules ou de ;
-      self.sep= '\t'
-    columns= li.split(self.sep)
-    nbCol= len(columns) #"""
     nbCol= len(self.columns)
     model.setColumnCount(nbCol)
-    
-    """numCol= 0
-    for col in self.columns: # Header
-      item= QStandardItem( col )
-      item.setTextAlignment( Qt.AlignCenter | Qt.AlignVCenter)
-      model.setItem(0, numCol, item)
-      numCol += 1 #"""
     
     ## Populate the table :
     numLi= 0
@@ -516,11 +555,11 @@ class json2csv(QDialog):
       numLi += 1
       if numLi == self.nbRows: break
     
-    self.newView.setModel(model)
     #self.newView.verticalHeader().setDefaultSectionSize(17)
     #self.newView.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch);
     #self.newView.resizeColumnsToContents();
     #self.newView.resizeRowsToContents();
+    self.newView.setModel(model)
 
 
 

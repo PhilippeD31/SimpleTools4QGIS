@@ -2,7 +2,10 @@
 **A plugin for QGIS**  
 A collection of simple tools for QGIS :  
 -- Categorized style from CSV  
+-- Analyze the raster tiles of a folder (and sub-folders) : create a grid based on the tiles, search for duplicates (same location)  
+-- Multi-layers GPKG to multiple GPKG files : extract the layers and styles  
 -- Inspect BIG csv (or text) files by quickly showing their first rows  
+-- Open Attributes Table FILTERED on SELECTED features  
 -- Convert JSON to CSV: flatten a json tree
 
 <table border=1 cellpadding=3 cellspacing=0>
@@ -22,6 +25,10 @@ A collection of simple tools for QGIS :
 
 **FR : une extension pour QGIS**  
 Conçu comme une collection d'outils simples. Une sorte de "couteau suisse" pour QGIS :  
+-- Convertir du JSON en CSV : mettre à plat une arborescence json (voir les exemples ci-dessus)  
 -- Style catégorisé à partir d'un CSV  
 -- Inspecter les 1ères lignes d'un GROS fichier CSV ou texte : affichage très rapide  
--- Convertir du JSON en CSV : mettre à plat une arborescence json  
+-- GPKG multi-couches vers plusieurs GPKG  
+-- Ouvrir la Table d'Attributs FILTRÉE sur les entités SELECTIONNÉES  
+-- Inspecter les 1ères lignes d'un GROS fichier CSV ou texte
+

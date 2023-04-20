@@ -3,7 +3,7 @@
 	<meta http-equiv=Content-Type content="text/html; charset=utf-8">
 	<title>Couteau suisse QGIS</title>
 	<style>
-		h3 {margin-bottom:10px}
+		h3 {margin-bottom:5px; margin-top:20px}
 		ul {margin-top:0}
 		li {margin-bottom:8px}
 	</style>
@@ -16,6 +16,11 @@
 La liste des outils proposés devrait s'allonger au cours du temps :</p>
 
 
+<h3>Dans la barre d'outils Attributs : <u>Ouvrir la Table d'Attributs FILTRÉE sur les entités SELECTIONNÉES</u></h3>
+Voir la liste des objets sélectionnés à un instant T dans une table d'attributs avec un filtre sur leurs <b>id</b>. Cela permet ensuite de changer la sélection SANS PERDRE la liste de T.
+<br>
+
+
 <h3>Dans Traitement > Boîte à outils > <u>Assistant de styles</u></h3>
 <ul>
 	<li><b>Style catégorisé à partir d'un CSV</b> : utiliser un fichier CSV (avec les valeurs, libellés et couleurs) pour donner un style catégorisé à une couche vecteur
@@ -26,12 +31,13 @@ La liste des outils proposés devrait s'allonger au cours du temps :</p>
 		<br>Choisir la couche cible et indiquer le champ à utiliser pour les catégories
 	</li>
 </ul>
-<br>
 
 
 <h3>Dans le menu Extensions > <u>Couteau suisse pour QGIS</u></h3>
-<ul>
+<ul> 
 	<li><b>Inspecter les 1ères lignes d'un GROS fichier CSV ou texte</b> : affichage très rapide.</li>
+	<li><b>Analyser les dalles raster d'un dossier (et sous-dossiers)</b> : créer une grille basée sur les dalles, chercher les doublons (même emplacement)...</li>
+	<li><b>GPKG multi-couches vers plusieurs GPKG</b> : extraction des couches.</li>
 	<li><b>Convertir du JSON en CSV</b> : mettre à plat une arborescence json.
 		<br>Si le 1er niveau du JSON est une liste, chaque élément de celle-ci donnera 1 ligne du CSV
 		<br>Le contenu de chaque élément (et sous-éléments) sera transformé en colonnes du CSV
