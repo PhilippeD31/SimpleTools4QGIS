@@ -6,7 +6,7 @@ A collection of simple tools for QGIS :
 -- Multi-layers GPKG to multiple GPKG files : extract the layers and styles  
 -- Inspect BIG csv (or text) files by quickly showing their first rows  
 -- Open Attributes Table FILTERED on SELECTED features  
--- Convert JSON to CSV: flatten a json tree
+-- Open JSON or convert to CSV: flatten a json tree
 
 <table border=1 cellpadding=3 cellspacing=0>
  <thead>
@@ -25,7 +25,7 @@ A collection of simple tools for QGIS :
 
 **FR : une extension pour QGIS**  
 Conçu comme une collection d'outils simples. Une sorte de "couteau suisse" pour QGIS :  
--- Convertir du JSON en CSV : mettre à plat une arborescence json (voir les exemples ci-dessus)  
+-- Ouvrir des JSON ou les convertir en CSV : mettre à plat une arborescence json (voir les exemples ci-dessus)  
 -- Style catégorisé à partir d'un CSV  
 -- Inspecter les 1ères lignes d'un GROS fichier CSV ou texte : affichage très rapide  
 -- GPKG multi-couches vers plusieurs GPKG  
