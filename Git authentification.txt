@@ -1,0 +1,26 @@
+
+Create Personal Access Token on GitHub
+
+From your GitHub account, go to Settings → Developer Settings → Personal Access Token → Generate New Token (Give your password) → Fillup the form → click Generate token → Copy the generated Token, it will be something like :
+
+TOKEN :
+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
+
+
+Gestionnaire d'identification > Information d'identification Windows
+
+Si git:https://github.com n'est pas deja présent :
+-> Ajouter des informations d'identification génériques :
+  Adress internet = git:https://github.com
+	Nom user = PhilippeD31
+	Mot de pass = le TOKEN ci-dessus
+
+Si git:https://github.com exite deja :
+-- Modifier
+-- Copier le TOKEN dans la case Mot de passe
+
+
+Go to Credential Manager from Control Panel → Windows Credentials → find git:https://github.com → Edit → On Password replace with with your GitHub Personal Access Token → You are Done
+
+If you don’t find git:https://github.com → Click on Add a generic credential → Internet address will be git:https://github.com and you need to type in your username and password will be your GitHub Personal Access Token → Click Ok and you are done
+

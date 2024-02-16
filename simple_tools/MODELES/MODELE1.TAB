@@ -1,0 +1,24 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 12
+    ID_MAP Integer ;
+    ID_ZONE Char (15) ;
+    ID_GASPAR Char (18) ;
+    NOM Char (254) ;
+    CODEZONE Char (50) ;
+    TYPEREG Char (2) ;
+    SOUMISALEA Char (3) ;
+    NOMFIC Char (80) ;
+    URLFIC Char (254) ;
+    SRCE_GEOM Char (100) ;
+    SRCE_ANNEE Char (4) ;
+    PRECISION Char (2) ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "a7f88dfd-2423-48ec-ad9b-af295df7b79f"
+end_metadata

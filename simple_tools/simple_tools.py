@@ -68,6 +68,7 @@ class plugin:
 		self.jsonConv = None # Dialog
 		self.dallesRaster = None # Dialog
 		self.extractionGPKG = None # Dialog
+		self.verifStandard = None # Panneau
 		self.params= "PluginStylingHelper/" # User Param in QSettings
 
 	def tr(self, txt, disambiguation=None):
@@ -95,17 +96,30 @@ class plugin:
 		self.pluginBar = []
 		self.attribBar = []
 		
-		self.actionEditor= QAction( QIcon( icons +'edit.png'),
-			self.tr("Inspect the first rows of a big CSV or text file"), win )
-		self.actionEditor.triggered.connect( self.showCsvEditor )
-		self.pluginMenu.addAction( self.actionEditor ) #iface.addToolBarIcon( self.actionEditor )
-		
-		self.jConv= QAction( QIcon( icons +'json.png'), self.tr("Convert JSON to CSV"), win )
+		self.jConv= QAction( QIcon( icons +'json.png'), self.tr("Open JSON or convert it to CSV"), win )
 		self.jConv.triggered.connect(self.showJsonConv)
 		self.pluginMenu.addAction( self.jConv )    #iface.addToolBarIcon(self.jConv)
 		self.pluginBar.append(self.jConv)
 		
-		self.CategorizedStyle= QAction( QIcon(icons+'help.png'),
+		self.actionEditor= QAction( QIcon( icons +'edit.png'),
+			self.tr("Inspect the first rows of a big CSV or text file"), win )
+		self.actionEditor.triggered.connect( self.showCsvEditor )
+		self.pluginMenu.addAction( self.actionEditor ) #iface.addToolBarIcon( self.actionEditor )
+		self.pluginBar.append(self.actionEditor)
+		
+		aExtraireGPKG = QAction( QIcon( icons +'gpkg_extraction.png'),
+			self.tr("Multi-layer GPKG to multiple GPKG files"), win )
+		aExtraireGPKG.triggered.connect(self.showExtractionGPKG)
+		self.pluginMenu.addAction( aExtraireGPKG )
+		self.pluginBar.append(aExtraireGPKG)
+		
+		aVerifStandard = QAction( QIcon( icons +'verif_standard.png'),
+			self.tr("Check if some layers abide by a standard (template layers)"), win )
+		aVerifStandard.triggered.connect(self.showVerifStandard)
+		self.pluginMenu.addAction( aVerifStandard )
+		self.pluginBar.append(aVerifStandard)
+		
+		self.CategorizedStyle= QAction( QIcon(icons+'csv2style.png'),
 			self.tr('Categorized style from CSV'), win )
 		self.CategorizedStyle.triggered.connect( showHelp )
 		self.pluginMenu.addAction( self.CategorizedStyle )
@@ -117,16 +131,10 @@ class plugin:
 		self.attribBar.append(self.tabSelAction)
 		
 		self.aDalles = QAction( QIcon( icons +'dalles.png'),
-			self.tr("Analyser les dalles raster d'un dossier et créer une grille"), win )
+			self.tr("Analyze raster tiles in a folder and create a grid"), win )
 		self.aDalles.triggered.connect(self.showDallesRaster)
 		self.pluginMenu.addAction( self.aDalles )
 		#self.pluginBar.append(self.aDalles)
-		
-		aExtraireGPKG = QAction( QIcon( icons +'gpkg_extraction.png'),
-			self.tr("GPKG multi-couches vers plusieurs GPKG"), win )
-		aExtraireGPKG.triggered.connect(self.showExtractionGPKG)
-		self.pluginMenu.addAction( aExtraireGPKG )
-		#self.pluginBar.append(aExtraireGPKG)
 		
 		self.actionAide= QAction( QIcon( icons +'help.png'),
 			self.tr('Help (plugin version %s)')% PluginVersion, win )
@@ -134,19 +142,28 @@ class plugin:
 		self.pluginMenu.addAction( self.actionAide )
 	 
 		self.initProcessing()
-		for action in self.pluginBar:  iface.addToolBarIcon(action)
+		
+		self.toolBar = iface.addToolBar( self.tr("Simple tools") )
+		for action in self.pluginBar:  self.toolBar.addAction(action) #iface.addToolBarIcon(action)
 		for action in self.attribBar:  iface.attributesToolBar().addAction(action)
 
 
 	def unload(self):
 		self.pluginMenu.parentWidget().removeAction(self.pluginMenu.menuAction()) # Remove from Extension menu
-		for action in self.pluginBar:  iface.removeToolBarIcon(action)
+		parent = self.toolBar.parentWidget().removeToolBar(self.toolBar)
+		#for action in self.pluginBar:  iface.removeToolBarIcon(action)
 		for action in self.attribBar:  iface.attributesToolBar().removeAction(action)
 		#try:
 		#  if hasattr(self,'jConv'):  iface.removeToolBarIcon(self.jConv)
 		#except: pass
 		try: QgsApplication.processingRegistry().removeProvider(self.provider)
 		except: pass
+		try: # Cacher le panneau verifStandard
+			self.verifStandard.hide()
+			iface.removeDockWidget(self.verifStandard)
+			self.verifStandard.deleteLater()
+		except: pass
+		if self.jsonConv:  self.jsonConv.hide()
 
 
 	def initProcessing(self):
@@ -164,7 +181,7 @@ class plugin:
 	def showJsonConv(self):
 		if not self.jsonConv:
 			from .json2csv import json2csv
-			self.jsonConv= json2csv()
+			self.jsonConv = json2csv()
 		self.jsonConv.show()
 
 
@@ -196,6 +213,19 @@ class plugin:
 			from .GPKGmulti_vers_plusieursGPKG import extractionGPKG
 			self.extractionGPKG = extractionGPKG()
 		self.extractionGPKG.show()
+
+
+	def showVerifStandard(self):
+		if self.verifStandard:
+			self.verifStandard.show()
+			return
+		from .verif_standard import panneau
+		self.verifStandard = QDockWidget("Contrôler que des couches respectent un standard", iface.mainWindow() )
+		self.verifStandard.setWidget( panneau( self.verifStandard, "verif_standard", False ) )
+		self.verifStandard.setObjectName("verif_standard")
+		self.verifStandard.setAllowedAreas(Qt.RightDockWidgetArea | Qt.LeftDockWidgetArea)
+		iface.addDockWidget( Qt.RightDockWidgetArea, self.verifStandard )
+		self.verifStandard.show()
 
 
 

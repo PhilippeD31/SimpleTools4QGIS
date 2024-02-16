@@ -1,0 +1,29 @@
+!table
+!version 450
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 17
+    ID_MAP Integer ;
+    ID_ZONE Char (15) ;
+    ID_GASPAR Char (18) ;
+    DESCRIPT Char (100) ;
+    CODERISQUE Char (7) ;
+    NOMRISQUE Char (150) ;
+    MULTI_ALEA Char (3) ;
+    NIVALEA Char (5) ;
+    NIVALEA_STD Char (2) ;
+    SRCE_GEOM Char (100) ;
+    SRCE_ANNEE Char (4) ;
+    PRECISION Char (2) ;
+    TITRECARTE Char (100) ;
+    DATECARTE Date ;
+    TYPECARTE Char (50) ;
+    NOMFIC Char (80) ;
+    URLFIC Char (254) ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "a90bdd70-739c-49c6-a7fa-84fdba41228d"
+end_metadata
