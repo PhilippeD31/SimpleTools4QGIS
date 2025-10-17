@@ -16,15 +16,13 @@ from qgis.core import *
 from qgis.gui import *
 import os
 from qgis.utils import iface, pluginMetadata
-#from qgis import processing
-#from .provider import Provider
-#from qgis.core import QgsProcessingProvider
-#from .example_processing_algorithm import ExampleProcessingAlgorithm
+
 from .categorized_from_csv import csvToCategorized
 #from .test_algorithm import pluginAlgorithm
 
 cePlugin= os.path.basename( os.path.dirname(__file__) )
 PluginVersion= pluginMetadata(cePlugin,'version') ## Pour les changements, voir le fichier metadata.txt
+
 
 
 def showHelp( parent=None ):  ### Help window
@@ -61,6 +59,7 @@ def showHelp( parent=None ):  ### Help window
 
 
 
+
 class plugin:
 	def __init__(self, iface):
 		self.provider = None # Processing
@@ -69,13 +68,16 @@ class plugin:
 		self.dallesRaster = None # Dialog
 		self.extractionGPKG = None # Dialog
 		self.verifStandard = None # Panneau
-		self.params= "PluginStylingHelper/" # User Param in QSettings
+		self.pluginSettings = "PluginSimpleTools/" # Section dans QGIS.ini pour les paramètres de ce plugin
+		self.paramAjust = 'ajusterAttribTables' # Nom du paramètre dans QGIS.ini
+		self.params = "PluginStylingHelper/" # User Param in QSettings
+		self.modifAttribTables = None
 
 	def tr(self, txt, disambiguation=None):
 		return QCoreApplication.translate('plugin', txt, disambiguation)
 
 	def initGui(self):
-		pluginPath= os.path.abspath(os.path.dirname(__file__))
+		pluginPath = os.path.abspath(os.path.dirname(__file__))
 		# Translator :
 		overrideLocale= QSettings().value("locale/overrideFlag", False, type=bool)
 		if not overrideLocale:  localeFullName= QLocale.system().name()
@@ -90,18 +92,18 @@ class plugin:
 			self.translator.load(localePath)
 			QCoreApplication.installTranslator(self.translator)
 		
-		icons= pluginPath + os.sep + "icons" + os.sep
+		icons = pluginPath + os.sep + "icons" + os.sep
 		win = iface.mainWindow()
-		self.pluginMenu= iface.pluginMenu().addMenu( QIcon(icons+'tools.png'), self.tr("Simple tools") )
+		self.pluginMenu = iface.pluginMenu().addMenu( QIcon(icons+'tools.png'), self.tr("Simple tools") )
 		self.pluginBar = []
 		self.attribBar = []
 		
-		self.jConv= QAction( QIcon( icons +'json.png'), self.tr("Open JSON or convert it to CSV"), win )
+		self.jConv = QAction( QIcon( icons +'json.png'), self.tr("Open JSON or convert it to CSV"), win )
 		self.jConv.triggered.connect(self.showJsonConv)
 		self.pluginMenu.addAction( self.jConv )    #iface.addToolBarIcon(self.jConv)
 		self.pluginBar.append(self.jConv)
 		
-		self.actionEditor= QAction( QIcon( icons +'edit.png'),
+		self.actionEditor = QAction( QIcon( icons +'edit.png'),
 			self.tr("Inspect the first rows of a big CSV or text file"), win )
 		self.actionEditor.triggered.connect( self.showCsvEditor )
 		self.pluginMenu.addAction( self.actionEditor ) #iface.addToolBarIcon( self.actionEditor )
@@ -119,7 +121,7 @@ class plugin:
 		self.pluginMenu.addAction( aVerifStandard )
 		self.pluginBar.append(aVerifStandard)
 		
-		self.CategorizedStyle= QAction( QIcon(icons+'csv2style.png'),
+		self.CategorizedStyle = QAction( QIcon(icons+'csv2style.png'),
 			self.tr('Categorized style from CSV'), win )
 		self.CategorizedStyle.triggered.connect( showHelp )
 		self.pluginMenu.addAction( self.CategorizedStyle )
@@ -136,7 +138,12 @@ class plugin:
 		self.pluginMenu.addAction( self.aDalles )
 		#self.pluginBar.append(self.aDalles)
 		
-		self.actionAide= QAction( QIcon( icons +'help.png'),
+		self.aRedim = QAction( QIcon( icons +'redim.png'),
+			"Options pour ajuster lignes et colonnes dans les tables attributaires", win )
+		self.aRedim.triggered.connect( self.Redim )
+		self.pluginMenu.addAction( self.aRedim )
+		
+		self.actionAide = QAction( QIcon( icons +'help.png'),
 			self.tr('Help (plugin version %s)')% PluginVersion, win )
 		self.actionAide.triggered.connect( showHelp )
 		self.pluginMenu.addAction( self.actionAide )
@@ -146,6 +153,11 @@ class plugin:
 		self.toolBar = iface.addToolBar( self.tr("Simple tools") )
 		for action in self.pluginBar:  self.toolBar.addAction(action) #iface.addToolBarIcon(action)
 		for action in self.attribBar:  iface.attributesToolBar().addAction(action)
+		# Ajouter 3 boutons dans chaque table attributaire : Largeur auto, Hauteur auto et Réduire colonnes :
+		S = QgsSettings()
+		S.beginGroup(self.pluginSettings)
+		if S.value(self.paramAjust,'')!='no':  self.modifAttribTables = AddAttributeTableAction()
+
 
 
 	def unload(self):
@@ -164,10 +176,13 @@ class plugin:
 			self.verifStandard.deleteLater()
 		except: pass
 		if self.jsonConv:  self.jsonConv.hide()
+		if self.modifAttribTables:
+			iface.mainWindow().removeEventFilter(self.modifAttribTables)
+			del self.modifAttribTables
 
 
 	def initProcessing(self):
-		self.provider= Provider( 'styling_helper', self.tr('Styling helper') )
+		self.provider = processProvider('styling_helper', self.tr('Styling helper') )
 		QgsApplication.processingRegistry().addProvider(self.provider)
 
 
@@ -228,17 +243,104 @@ class plugin:
 		self.verifStandard.show()
 
 
+	def Redim(self): ## Activer/désactiver les outils de largeur de colonnes et hauteur de lignes
+		if self.modifAttribTables:  actuel = 0
+		else:  actuel = 1
+		rep, ok = QInputDialog.getItem( iface.mainWindow(), "Options pour les tables attributaires",
+			"Ajouter dans chaque vue attributaire 3 boutons pour :\n"
+			+"  -- ajuster la hauteur des lignes à leur contenu\n"
+			+"  -- ajuster la largeur des colonnes à leur contenu\n"
+			+"  -- choisir et appliquer une largeur unique à toutes les colonnes",
+			['OUI','NON'], actuel, False )
+		if not ok:  return
+		S = QgsSettings()
+		S.beginGroup(self.pluginSettings) 
+		if rep=='NON' and self.modifAttribTables:
+			iface.mainWindow().removeEventFilter(self.modifAttribTables)
+			del self.modifAttribTables
+			self.modifAttribTables = None
+			S.setValue(self.paramAjust, 'no')
+		elif rep=='OUI' and not self.modifAttribTables:
+			self.modifAttribTables = AddAttributeTableAction()
+			S.setValue(self.paramAjust, 'yes')
 
 
-class Provider(QgsProcessingProvider):
+
+### Ajoute 3 boutons dans chaque table attributaire : Largeur auto, Hauteur auto et Réduire colonnes
+class AddAttributeTableAction(QObject):
+	def __init__(self):
+		super().__init__()
+		self.mainWin = iface.mainWindow()
+		self.mainWin.installEventFilter(self)
+		self.largeur = 60 # largeur par defaut des colonnes
+
+	def eventFilter(self, obj, event):
+		if event.type() == QEvent.ChildAdded and obj == self.mainWin:
+				self.attribute_dialog_opened()
+		return super(AddAttributeTableAction, self).eventFilter(obj, event)
+
+	def attribute_dialog_opened(self):
+		tbl_dlgs = [w for w in self.mainWin.children() if 'QgsAttributeTableDialog' in w.objectName()]
+		if not tbl_dlgs:  return
+		table_dialog = tbl_dlgs[0]
+		toolbar = [c for c in table_dialog.children() if c.objectName() == 'mToolbar'][0]
+		# check if action has already been added to toolbar
+		already_exists = [a for a in toolbar.actions() if a.objectName() == 'hauteurAuto']
+		if already_exists:  return
+		icons = os.path.abspath(os.path.dirname(__file__)) + os.sep + "icons" + os.sep
+		
+		largeurAuto = QAction( QIcon( icons +'redim_col.png'),
+			"Ajuster la largeur des colonnes pour s'adapter automatiquement à leur contenu", table_dialog )
+		largeurAuto.setObjectName('largeurAuto')
+		toolbar.addAction(largeurAuto)
+		largeurAuto.triggered.connect(self.largeurAuto)
+		
+		reduireCol = QAction( QIcon( icons +'redim_largeur.png'),
+			"choisir et appliquer une largeur unique à toutes les colonnes", table_dialog )
+		reduireCol.setObjectName('reduireCol')
+		toolbar.addAction(reduireCol)
+		reduireCol.triggered.connect(self.reduireCol)
+		
+		hauteurAuto = QAction( QIcon( icons +'redim.png'),
+			"Ajuster la hauteur des lignes pour s'adapter automatiquement à leur contenu", table_dialog )
+		hauteurAuto.setObjectName('hauteurAuto')
+		#hauteurAuto.setToolTip("redimensionner la hauteur des lignes pour s'adapter automatiquement au contenu de leurs cellules")
+		toolbar.addAction(hauteurAuto)
+		hauteurAuto.triggered.connect(self.hauteurAuto)
+
+	def hauteurAuto(self):
+		'''pour redimensionner la hauteur des lignes pour s'adapter automatiquement au contenu de leurs cellules'''
+		atb = QgsApplication.activeWindow()
+		tv = atb.findChild(QTableView,'mTableView')
+		tv.resizeRowsToContents()
+
+	def largeurAuto(self):
+		atb = QgsApplication.activeWindow()
+		tv = atb.findChild(QTableView,'mTableView')
+		tv.resizeColumnsToContents()
+
+	def reduireCol(self):
+		atb = QgsApplication.activeWindow()
+		tv = atb.findChild(QTableView,'mTableView')
+		largeur, ok = QInputDialog.getInt( atb, "Entrer la largeur des colonnes",
+				"Largeur en pixels :", self.largeur, 5, 2000 )
+		if not ok:  return
+		self.largeur = largeur
+		for i in range( tv.model().columnCount() ):
+			tv.setColumnWidth( i, largeur )
+
+
+
+## Pour la définition d'un new traitement dans Processing
+class processProvider(QgsProcessingProvider):
 	def __init__(self, procId, name):
 		QgsProcessingProvider.__init__(self)
-		self.procId= procId
-		self.procName= name
+		self.procId = procId
+		self.procName = name
 
 	def loadAlgorithms(self, *args, **kwargs):
-		self.addAlgorithm( csvToCategorized() )
 		#self.addAlgorithm( pluginAlgorithm() )
+		self.addAlgorithm( csvToCategorized() )
 
 	def id(self, *args, **kwargs): ## The ID of the provider, used for identifying it
 		"""This string should be a unique, short, character only string,
@@ -253,4 +355,5 @@ class Provider(QgsProcessingProvider):
 	def icon(self):
 		"""Should return a QIcon which is used for your provider inside the Processing toolbox."""
 		return QgsProcessingProvider.icon(self)
+
 

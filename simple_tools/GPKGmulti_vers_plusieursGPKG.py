@@ -59,6 +59,7 @@ class extractionGPKG(QDialog):
 		li += 1
 		self.choixDir = QgsFileWidget()
 		self.choixDir.setStorageMode(QgsFileWidget.GetDirectory)
+		self.choixDir.lineEdit().setPlaceholderText("cliquer sur le bouton à droite ->")
 		self.choixDir.setSizePolicy( QSizePolicy.Expanding, QSizePolicy.Fixed )
 		grille.addWidget(self.choixDir, li, 1, 1, 2)
 		
@@ -69,6 +70,14 @@ class extractionGPKG(QDialog):
 		li += 1
 		etiOp = QLabel("<b>Options</b>")
 		grille.addWidget(etiOp, li, 2, 1, 1)
+		
+		li += 1
+		etiFiltre = QLabel("<b>Filtre</b>")
+		grille.addWidget(etiFiltre, li, 1, 1, 1)
+		self.filtre = QLineEdit(self)
+		self.filtre.setToolTip("Ecrire un filtre comme dans celui d'une couche QGIS. par ex.: code_dep='31' ")
+		self.filtre.setPlaceholderText("ex.: code_dep='31' ")
+		grille.addWidget(self.filtre, li, 2, 1, 1)
 		
 		li += 1
 		self.majuscules = QCheckBox("Passer les noms de couche en majuscules")
@@ -203,6 +212,8 @@ class extractionGPKG(QDialog):
 
 		#gdal.UseExceptions()
 		#gdal.SetConfigOption('CPL_DEBUG', 'ON')
+		filtre = self.filtre.text().strip()
+		if filtre:  filtre = ' WHERE '+ filtre
 		majuscules = self.majuscules.isChecked()
 		prefix = self.prefix.text().strip()
 		suffix = self.suffix.text().strip()
@@ -225,11 +236,14 @@ class extractionGPKG(QDialog):
 					erreurs += table +": ECHEC: le fichier existant dans "+dir+" n'a pu être supprimé.\n\n"
 					continue
 			try:
-				res = gdal.VectorTranslate( desti, ds, format='GPKG', layerName=layer,
-					SQLStatement='SELECT * FROM '+ table )
+				res = gdal.VectorTranslate( desti, ds, format='GPKG', layerName=layer, SQLStatement='SELECT * FROM ' +table +filtre )
 				if not res:
-					erreurs += "Echec de l'enregistrement de "+desti +"\n\n"
-					continue
+					QFile.remove(desti)
+					res = gdal.VectorTranslate( desti, ds, format='GPKG', layerName=layer, SQLStatement='SELECT * FROM '+table )
+					if res:  erreurs += f"# Le filtre n'a pas marché pour {table}\n\n"
+					else:
+						erreurs += f"Echec de l'enregistrement de {desti}\n\n"
+						continue
 			except Exception as e: # Type d'exception: e.__class__.__name__
 				if hasattr(e, 'msg'): erreur= e.msg
 				elif hasattr(e, 'message'): erreur= e.message
@@ -265,7 +279,7 @@ class extractionGPKG(QDialog):
 					erreurs += "Soucis à la sauvegarde du style de "+table +".\n"+ query.lastError().text() +"\n\n"
 				newdb.close()
 		
-		ds = None		
+		ds = None
 		self.etat.setText("<center><b>---- FIN ----</b><br>durée : %.1f sec</center>"% (time.time() - debut) )
 		self.messageBar.clearWidgets()
 		if N==0: self.messageBar.pushMessage("ECHEC ", "Aucune couche extraite", Qgis.Critical, 20)
